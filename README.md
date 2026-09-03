@@ -1,45 +1,42 @@
 <p align="center">
   <img src="assets/banner.png" alt="Phyto-Helios Banner" width="100%">
-</p>
+  </p>
 
-# ☀️ Phototrophism Simulator
+# ☀️ Phyto-Helios
 
-Interactive HTML simulator visualizing plant phototropism through directional light sensing, auxin redistribution, and differential growth.
+### *Interactive Phototropism Simulator*
 
----
+> An educational simulation exploring plant phototropism through directional light perception, auxin redistribution, and differential growth.
 
-## ✨ Features
-
-* **Dynamic Growth:** Observe shoot bending in response to changing sunlight direction.
-* **Adjustable Sun Position:** Reposition the light source to investigate phototropic responses.
-* **Auxin Magnifier:** Visualize auxin redistribution and the Cholodny–Went bending mechanism.
-* **Responsive Design:** Optimized for desktop and mobile devices.
+**☀️ Plant Physiology · 🌱 Phototropism · 🧪 Auxin**
 
 ---
 
-## 🚀 Built With & Hosted On
+## ✦ Features
 
-* **Repository:** GitHub
-* **Hosting:** GitHub Pages
+**☀️ Dynamic Growth**
+Observe shoot bending in response to changing light direction.
+
+**🌞 Interactive Sun Position**
+Reposition the light source to investigate phototropic responses.
+
+**🧪 Auxin Visualization**
+Explore auxin redistribution and the Cholodny–Went mechanism during differential growth.
+
+**📱 Responsive Design**
+Optimized for desktop and mobile devices.
 
 ---
 
-## 🛠️ Credits & Acknowledgments
+## ⚙️ Technology
 
-* **Claude Sonnet:** Debugging, code generation & architecture.
-* **Replit:** Code improvisation & rapid prototyping.
-* **OpenAI:** Scientific debugging, testing & logic optimization.
+**HTML · CSS · JavaScript**
 
----
-
-## 👤 Author
-
-* **Draven Ashcroft**
-  * M.Sc. Ag. Entomology, ASRB NET
-  * DIPS Chain of Institutions
+**Source:** GitHub
+**Hosting:** GitHub Pages
 
 ---
 
 ## 📜 License
 
-GPL-3.0
+**GNU General Public License v3.0 (GPL-3.0)**
