@@ -1,30 +1,38 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Phyto-Helios Banner" width="100%">
-  </p>
+  <img src="assets/banner.png" alt="Phyto-Helios — Interactive Phototropism Simulator" width="100%">
+</p>
 
 # ☀️ Phyto-Helios
 
 ### *Interactive Phototropism Simulator*
 
-> An educational simulation exploring plant phototropism through directional light perception, auxin redistribution, and differential growth.
+> **Phyto-Helios** is an interactive visualization exploring **plant phototropism, directional light perception, auxin redistribution, and differential growth**.
+>
+> ☀️ **Plant Physiology** · 🌱 **Phototropism** · 🧪 **Auxin**
 
-**☀️ Plant Physiology · 🌱 Phototropism · 🧪 Auxin**
+**🔬 [Explore the Simulation](YOUR-LINK-HERE)**
 
 ---
 
 ## ✦ Features
 
-**☀️ Dynamic Growth**
+**☀️ Dynamic Growth**  
 Observe shoot bending in response to changing light direction.
 
-**🌞 Interactive Sun Position**
+**🌞 Interactive Light Position**  
 Reposition the light source to investigate phototropic responses.
 
-**🧪 Auxin Visualization**
-Explore auxin redistribution and the Cholodny–Went mechanism during differential growth.
+**🧪 Auxin Visualization**  
+Explore auxin redistribution and the **Cholodny–Went mechanism** during differential growth.
 
-**📱 Responsive Design**
-Optimized for desktop and mobile devices.
+**📱 Responsive Design**  
+Optimized for modern desktop and mobile devices.
+
+---
+
+## 🧬 Core Concepts
+
+**Phototropism · Auxin Redistribution · Cholodny–Went Model · Differential Growth · Light Perception · Plant Physiology**
 
 ---
 
@@ -32,11 +40,11 @@ Optimized for desktop and mobile devices.
 
 **HTML · CSS · JavaScript**
 
-**Source:** GitHub
+**Repository:** GitHub & Codeberg  
 **Hosting:** GitHub Pages
 
 ---
 
 ## 📜 License
 
-**GNU General Public License v3.0 (GPL-3.0)**
+Distributed under the **GNU General Public License v3.0 (GPL-3.0)**.
