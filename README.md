@@ -8,7 +8,7 @@
 
 > **Phyto-Helios** is an interactive visualization exploring **plant phototropism, directional light perception, auxin redistribution, and differential growth**.
 >
-> ☀️ **Plant Physiology** · 🌱 **Phototropism** · 🧪 **Auxin**
+☀️ **Plant Physiology** · 🌱 **Phototropism** · 🧪 **Auxin**
 
 **🔬 [Explore the Simulation](YOUR-LINK-HERE)**
 
