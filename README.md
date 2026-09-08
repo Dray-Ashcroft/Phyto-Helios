@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Phyto-Helios — Interactive Phototropism Simulator" width="100%">
+  <img src="assets/repo-banner.png" alt="Phyto-Helios — Interactive Phototropism Simulator" width="100%">
 </p>
 
 # ☀️ Phyto-Helios
