@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Phyto-Helios — Interactive Phototropism Simulator" width="100%">
+  src="assets/repo-banner.pngimg<src="assets/banner.pngimg src="assets/banner.png" alt="Phyto-Helios — Interactive Phototropism Simulator" width="100%">
 </p>
 
 # ☀️ Phyto-Helios
@@ -8,7 +8,7 @@
 
 > **Phyto-Helios** is an interactive visualization exploring **plant phototropism, directional light perception, auxin redistribution, and differential growth**.
 >
-> ☀️ **Plant Physiology** · 🌱 **Phototropism** · 🧪 **Auxin**
+☀️ **Plant Physiology** · 🌱 **Phototropism** · 🧪 **Auxin**
 
 **🔬 [Explore the Simulation](YOUR-LINK-HERE)**
 
