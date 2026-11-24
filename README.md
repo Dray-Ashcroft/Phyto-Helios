@@ -6,7 +6,7 @@
 
 <p align="center"><i>How a shoot turns toward light · An interactive phototropism lab</i></p>
 
-<p align="center"><b><a href="https://dray-ashcroft.github.io/Phyto-Helios/">Launch the Simulator</a></b></p>
+<p align="center"><b><a href="https://dray-ashcroft.github.io/Phyto-Helios/">Launch Phyto Helios</a></b></p>
 
 <p align="center">
   <a href="#about">About</a> ·
