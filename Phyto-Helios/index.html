@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Phyto Helios — Phototropism Simulation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="wrap">
+  <header class="app-header">
+    <div class="app-icon-wrap" aria-hidden="true">
+      <svg viewBox="0 0 44 44" style="width:46px;height:46px;">
+        <circle cx="22" cy="22" r="20" fill="#241a0c"></circle>
+        <circle cx="22" cy="22" r="8" fill="#ffdd7a"></circle>
+        <g stroke="#ffdd7a" stroke-width="2" stroke-linecap="round">
+          <line x1="22" y1="8" x2="22" y2="12"></line><line x1="22" y1="32" x2="22" y2="36"></line>
+          <line x1="8" y1="22" x2="12" y2="22"></line><line x1="32" y1="22" x2="36" y2="22"></line>
+          <line x1="11.8" y1="11.8" x2="14.6" y2="14.6"></line><line x1="29.4" y1="29.4" x2="32.2" y2="32.2"></line>
+          <line x1="32.2" y1="11.8" x2="29.4" y2="14.6"></line><line x1="14.6" y1="29.4" x2="11.8" y2="32.2"></line>
+        </g>
+      </svg>
+    </div>
+    <h1 class="app-title">Phyto Helios</h1>
+    <button class="theme-btn" id="themeBtn" title="Switch to light theme" aria-label="Switch to light theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"></path></svg>
+    </button>
+  </header>
+  <p class="subtitle">How a shoot turns toward light · An interactive phototropism lab</p>
+
+  <div class="layout">
+  <div class="main">
+  <div class="panel">
+    <div class="stage" id="stage" tabindex="0" aria-label="3D scene. Use the arrow keys to orbit the camera.">
+      <canvas id="glCanvas" aria-label="3D scene: two plants under separate light sources, divided by a partition"></canvas>
+
+      <svg id="overlay" xmlns="http://www.w3.org/2000/svg">
+        <g id="protractor" style="display:none"></g>
+        <g id="magLayer" style="display:none">
+          <line id="magLeaderLine" stroke="rgba(200,225,180,0.6)" stroke-width="1.5" stroke-dasharray="5 4" stroke-linecap="round" opacity="0"></line>
+          <circle id="magApexDot" r="3.5" fill="none" stroke="rgba(200,225,180,0.85)" stroke-width="1.5" opacity="0"></circle>
+          <circle id="magHit" r="10" fill="transparent"></circle>
+        </g>
+      </svg>
+
+      <div class="tag sun" id="tagSunA">Sun A</div>
+      <div class="tag sun" id="tagSunB">Sun B</div>
+      <div class="tag pot a" id="tagControl"><span class="badge">A</span><span class="tag-text">Control<small>Sun A · fixed overhead</small></span></div>
+      <div class="tag pot b" id="tagExperimental"><span class="badge">B</span><span class="tag-text">Experimental<small>Sun B · adjustable angle</small></span></div>
+
+      <div class="call-card" id="callCard" role="status" aria-live="polite">
+        <div class="call-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="10.3" cy="10.3" r="6"></circle><line x1="14.8" y1="14.8" x2="20" y2="20" stroke-linecap="round"></line></svg>
+        </div>
+        <div class="call-text">
+          <p class="call-title" id="callTitle">Magnifier</p>
+          <p class="call-line" id="callLine1"></p>
+          <p class="call-line" id="callLine2"></p>
+        </div>
+      </div>
+
+      <div class="navpad" id="navPad" role="group" aria-label="Camera navigation">
+        <button class="nav up" data-dir="up" aria-label="Orbit up" title="Orbit up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"></path></svg></button>
+        <button class="nav left" data-dir="left" aria-label="Orbit left" title="Orbit left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+        <button class="nav right" data-dir="right" aria-label="Orbit right" title="Orbit right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+        <button class="nav down" data-dir="down" aria-label="Orbit down" title="Orbit down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
+      </div>
+
+      <div class="loader" id="loader" role="progressbar" aria-label="Loading 3D scene" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="loader-box">
+          <p id="stageStatus">Loading 3D scene…</p>
+          <div class="loader-bar"><i id="loaderBar"></i></div>
+          <small id="loaderStep">Starting</small>
+        </div>
+      </div>
+      <p class="sr-only" id="sceneSummary" aria-live="polite"></p>
+    </div>
+
+    <div class="toolbar">
+      <button id="magBtn" title="Show magnifier" aria-label="Show magnifier">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.3" cy="10.3" r="6"></circle><line x1="14.8" y1="14.8" x2="20" y2="20" stroke-linecap="round"></line></svg>
+      </button>
+      <button id="magScaleDownBtn" title="Shrink magnifier" aria-label="Shrink magnifier">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.3" cy="10.3" r="6"></circle><line x1="14.8" y1="14.8" x2="20" y2="20" stroke-linecap="round"></line><line x1="7.3" y1="10.3" x2="13.3" y2="10.3" stroke-linecap="round"></line></svg>
+      </button>
+      <button id="magScaleUpBtn" title="Enlarge magnifier" aria-label="Enlarge magnifier">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.3" cy="10.3" r="6"></circle><line x1="14.8" y1="14.8" x2="20" y2="20" stroke-linecap="round"></line><line x1="7.3" y1="10.3" x2="13.3" y2="10.3" stroke-linecap="round"></line><line x1="10.3" y1="7.3" x2="10.3" y2="13.3" stroke-linecap="round"></line></svg>
+      </button>
+      <div class="room-switch" id="roomSwitch" role="radiogroup" aria-label="Focus on a room">
+        <span class="room-thumb" id="roomThumb"></span>
+        <button class="room-opt" role="radio" aria-checked="false" data-room="left" aria-label="Room A" title="Room A"><b>A</b></button>
+        <button class="room-opt" role="radio" aria-checked="false" data-room="right" aria-label="Room B" title="Room B"><b>B</b></button>
+      </div>
+      <button id="protBtn" title="Show protractor" aria-label="Show protractor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18"></path><path d="M4.5 18a7.5 7.5 0 0 1 15 0"></path><path d="M12 18 16.5 9.5"></path><path d="M12 13.5v1M8.2 14.8l.6.6M15.2 15.4l.6-.6"></path></svg>
+      </button>
+      <button id="layoutBtn" title="Reset layout" aria-label="Reset layout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><path d="M14 17a3.2 3.2 0 1 0 1-2.3"></path><path d="M14 13.6v2h2"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  </div>
+  <div class="side">
+  <div class="toolbar">
+    <button id="playBtn" title="Play" aria-label="Play">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="currentColor"></path></svg>
+    </button>
+    <button id="resetBtn" title="Reset simulation" aria-label="Reset simulation">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 5V2L7 6l5 4V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8Z" fill="currentColor"></path></svg>
+    </button>
+    <div class="clock" id="timeClock" tabindex="0" role="slider" aria-label="Elapsed time in hours" aria-valuemin="0" aria-valuemax="250" aria-valuenow="0">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="#1a1d24" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"></circle>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="6"></circle>
+        <circle id="clockArc" cx="50" cy="50" r="38" fill="none" stroke="#ffd966" stroke-width="6" stroke-linecap="round"
+                transform="rotate(-90 50 50)" stroke-dasharray="238.76" stroke-dashoffset="238.76"></circle>
+        <g id="clockTicks"></g>
+        <g id="clockHand">
+          <line x1="50" y1="50" x2="50" y2="17" stroke="#fff" stroke-width="2.6" stroke-linecap="round"></line>
+          <circle cx="50" cy="12" r="5.5" fill="#ffd966" stroke="#241a0c" stroke-width="1.2"></circle>
+        </g>
+        <circle cx="50" cy="50" r="3.6" fill="#fff"></circle>
+      </svg>
+    </div>
+    <div class="clock-text">
+      <p class="clock-t" id="hoursReadout">t = 0 h</p>
+      <p class="clock-s" id="dayReadout">Day 1 of 15 · drag the hand</p>
+    </div>
+  </div>
+
+  <div class="dial-panel">
+    <div class="sundial-wrap">
+      <canvas id="sundialCanvas" tabindex="0" role="slider" aria-label="Sun B angle" aria-valuemin="-55" aria-valuemax="55" aria-valuenow="22"></canvas>
+      <svg id="sunHandle" viewBox="0 0 132 132" aria-hidden="true">
+        <path id="sunArc" fill="none" stroke="rgba(255,217,102,0.35)" stroke-width="1.6" stroke-dasharray="3 3" stroke-linecap="round"></path>
+        <line id="sunRay" stroke="rgba(255,217,102,0.45)" stroke-width="1" stroke-linecap="round"></line>
+        <g id="sunKnob">
+          <circle r="14" fill="rgba(255,205,90,0.18)"></circle>
+          <circle r="7.5" fill="#ffd966" stroke="#ffc93c" stroke-width="1.2"></circle>
+          <g stroke="#ffd966" stroke-width="1.4" stroke-linecap="round">
+            <line x1="0" y1="-11" x2="0" y2="-13.5"></line><line x1="0" y1="11" x2="0" y2="13.5"></line>
+            <line x1="-11" y1="0" x2="-13.5" y2="0"></line><line x1="11" y1="0" x2="13.5" y2="0"></line>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="dial-text">
+      <p class="t">Sun B angle</p>
+      <p class="s">Drag the sun handle (or across the sundial) to move Sun B. The pointer's shadow follows the light.</p>
+    </div>
+    <span class="dial-readout" id="dialReadout">22°</span>
+  </div>
+
+  <div class="light-panel">
+    <p class="t" id="lightTitle">Light · Blue 450 nm</p>
+    <p class="s">Colour, mode and intensity apply equally to both suns, so they stay controlled variables.</p>
+    <div class="chip-row">
+      <div class="seg" role="radiogroup" aria-label="Light colour" id="colourSeg">
+        <button role="radio" aria-checked="true" data-v="blue"><i style="--dot:#3d7bff"></i>Blue</button>
+        <button role="radio" aria-checked="false" data-v="green"><i style="--dot:#2fbf5a"></i>Green</button>
+        <button role="radio" aria-checked="false" data-v="red"><i style="--dot:#ff4d3d"></i>Red</button>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="Light mode" id="modeSeg">
+        <button role="radio" aria-checked="true" data-v="cont">Continuous</button>
+        <button role="radio" aria-checked="false" data-v="pulse">Pulse</button>
+      </div>
+      <button class="icon-act" id="pulseBtn" title="Give a 1 h light pulse now" aria-label="Give a 1 hour light pulse now" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M13 2.5 5 13.5h6l-1 8 8-11h-6l1-8Z"></path></svg>
+      </button>
+    </div>
+    <div class="row">
+      <span class="swatch" aria-hidden="true"></span>
+      <input type="range" id="fluenceSlider" min="-2" max="2" step="0.05" value="0" aria-label="Light fluence rate, log scale" />
+      <span class="light-readout" id="fluenceReadout">1.0 µmol m⁻² s⁻¹</span>
+    </div>
+  </div>
+
+  <div class="narration-cards">
+    <div class="stat-card" style="--accent: rgba(160,164,172,0.6);">
+      <p class="label">Control shoot · Sun A</p>
+      <p id="controlStat">0° · lag phase, light from overhead</p>
+    </div>
+    <div class="stat-card" style="--accent: rgba(255,205,90,0.7);">
+      <p class="label">Experimental shoot · Sun B</p>
+      <p id="experimentalStat">0° · lag phase, light from the right</p>
+    </div>
+  </div>
+
+  <section class="data-card" aria-labelledby="dataTitle">
+    <div class="data-head">
+      <h2 id="dataTitle">Bend angle over time <small>(+ right, − left)</small></h2>
+      <div class="seg small" role="radiogroup" aria-label="Chart view" id="viewSeg">
+        <button role="radio" aria-checked="true" data-v="bend">Bend</button>
+        <button role="radio" aria-checked="false" data-v="growth">Flank growth</button>
+      </div>
+      <div class="seg small" role="radiogroup" aria-label="Plants per room" id="repSeg">
+        <button role="radio" aria-checked="true" data-v="1">1 plant</button>
+        <button role="radio" aria-checked="false" data-v="5">5 seedlings</button>
+      </div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <canvas id="chart" role="img" aria-label="Line chart of shoot bend angle against time for plants A and B"></canvas>
+    <div class="data-actions" role="toolbar" aria-label="Readings">
+      <button class="icon-act primary" id="freezeBtn" title="Record reading" aria-label="Record reading">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3.6" fill="currentColor" stroke="none"></circle></svg>
+      </button>
+      <button class="icon-act" id="copyCsvBtn" title="Copy readings (CSV)" aria-label="Copy readings as CSV">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="12" rx="2.2"></rect><path d="M15.5 8.5V6a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>
+      </button>
+      <button class="icon-act" id="saveCsvBtn" title="Save readings (CSV)" aria-label="Save readings as CSV">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="11" rx="2"></rect><path d="M3.5 8h17M9.5 3.5v11"></path><path d="M12 15.5v5M9.5 18l2.5 2.5 2.5-2.5"></path></svg>
+      </button>
+      <button class="icon-act" id="savePngBtn" title="Save chart (PNG)" aria-label="Save chart as PNG image">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="13" rx="2"></rect><path d="m6.5 13.5 3.5-4 3 3 2-2 2.5 3"></path><path d="M12 17v4M9.8 19l2.2 2.2 2.2-2.2"></path></svg>
+      </button>
+      <button class="icon-act" id="clearBtn" title="Clear readings" aria-label="Clear readings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10.5 11v5.5M13.5 11v5.5"></path></svg>
+      </button>
+    </div>
+    <div class="reasoning" id="reasoning" aria-live="polite"></div>
+    <p class="data-note" id="dataNote" role="status"></p>
+    <div id="resultsWrap"><p class="results-empty">No readings yet. Pause at any time and tap the record button.</p></div>
+  </section>
+
+  <div class="info-card" id="mechanismCard" data-expanded="false">
+    <button class="info-card-header" id="mechanismCardToggle" aria-expanded="false" aria-controls="mechanismCardContent">
+      <span>Mechanism</span>
+      <svg class="mini-icon info-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+    </button>
+    <div class="info-card-panel"><div class="info-card-panel-inner">
+      <div class="info-card-body" id="mechanismCardContent" role="region" aria-labelledby="mechanismCardToggle">
+        <p><strong>Positive phototropism (Cholodny–Went hypothesis)</strong></p>
+        <p>Auxin (indole-3-acetic acid, IAA) is synthesised at the shoot apex. Blue light from one side is perceived by phototropin photoreceptors, and auxin is redistributed laterally to the shaded flank. Cells on the shaded flank elongate faster than those on the lit flank, so the shoot bends <strong>towards the light</strong>.</p>
+        <p>The bend develops in the elongation zone below the apex, after a short lag. A shoot lit from directly above receives no lateral signal, distributes auxin evenly and grows vertically, which is why Sun A serves as the control.</p>
+        <p><strong>How the model is set</strong></p>
+        <p>Lag phase: curvature starts about 4.5 h after continuous unilateral blue light begins, as measured in cucumber hypocotyls (<a href="https://pure.psu.edu/en/publications/kinetic-separation-of-phototropism-from-bluelight-inhibition-of-s/" target="_blank" rel="noopener">Photochemistry and Photobiology</a>).</p>
+        <p>Light intensity: above about 1 µmol m⁻² s⁻¹ the lag lengthens and the final curvature is reduced (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC167088" target="_blank" rel="noopener">Whippo &amp; Hangarter, Plant Physiology 2003</a>). Very dim light gives a weak response, so the model peaks near 1 µmol m⁻² s⁻¹.</p>
+        <p>Growth: the shaded flank elongates faster and the lit flank slower, as the Cholodny–Went hypothesis predicts (<a href="https://pmc.ncbi.nlm.nih.gov/articles/158958" target="_blank" rel="noopener">Plant Physiology</a>).</p>
+        <p>Bend angle: the shoot's apex turns toward the light while gravitropism pulls it back toward vertical. Gravitropic correction follows a sine law (<a href="https://link.springer.com/article/10.1007/s00425-001-0705-1" target="_blank" rel="noopener">Galland et al., Planta 2002</a>). The two combine into a photogravitropic set-point angle, weighted by the plant's photo- and gravi-sensitivities (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4332863" target="_blank" rel="noopener">Bastien, Douady &amp; Moulia 2015</a>). The model uses dθ/dt = Kp·g(I)·sin(φ − θ) − Kg·sin θ, with φ the light direction perceived one lag earlier.</p>
+        <p>The 360 h (15-day) timeline compresses seedling growth for display. The timing follows the figures above; the plant's size and the Kp/Kg ratio (3:1) are illustrative.</p>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="info-card" id="creditsCard" data-expanded="false">
+    <button class="info-card-header" id="creditsCardToggle" aria-expanded="false" aria-controls="creditsCardContent">
+      <span>Credits</span>
+      <svg class="mini-icon info-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+    </button>
+    <div class="info-card-panel"><div class="info-card-panel-inner">
+      <div class="info-card-body" id="creditsCardContent" role="region" aria-labelledby="creditsCardToggle">
+        <p>“<a href="https://skfb.ly/oY7EL" target="_blank" rel="noopener">Avocady</a>” by Wenschel, licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</p>
+        <p>“<a href="https://skfb.ly/6U8EY" target="_blank" rel="noopener">Sun</a>” by PatelDev, licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</p>
+        <p>“<a href="https://skfb.ly/oyYpS" target="_blank" rel="noopener">Styled Magnifying Glass</a>” by Incg5764, licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.</p>
+        <p>“<a href="https://skfb.ly/69ZRU" target="_blank" rel="noopener">Sundial “Zodiac” in the Square them. Anna Herman</a>” by johankarpov, licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>.</p>
+        <p>“Root Structure” by arloopa, licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>; adapted here as the stem section.</p>
+        <p>Changes: all models were optimised for the web (geometry simplified, textures resized). The plant's shoot is scaled for growth and deformed at runtime to show the phototropic bend. The root model was turned apex-up, recoloured green, stripped of labels and root hairs, cut transversely and given a cellular stem section whose cells elongate with auxin. The sundial's texture was resized and the model re-oriented.</p>
+      </div>
+    </div></div>
+  </div>
+
+  </div>
+  </div>
+</div>
+
+
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
